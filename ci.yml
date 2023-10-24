@@ -1,0 +1,20 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build and test
+      run: |
+        docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
+        docker-compose exec chat-log npm test
+        docker-compose -f docker-compose.yml -f docker-compose.ci.yml down
